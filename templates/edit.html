@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Class</title>
+
+    <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#111827">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <section class="add-section">
+
+        <h1>✏️ Edit Class</h1>
+
+        <form
+                method="POST"
+                class="add-form"
+        >
+
+            <div>
+
+                <label>Day</label>
+
+                <select name="day_of_week">
+
+                    <option value="0"
+                            {% if class_item.day_of_week == 0 %}
+                            selected
+                            {% endif %}
+                    >
+                        Monday
+                    </option>
+
+                    <option value="1"
+                            {% if class_item.day_of_week == 1 %}
+                            selected
+                            {% endif %}
+                    >
+                        Tuesday
+                    </option>
+
+                    <option value="2"
+                            {% if class_item.day_of_week == 2 %}
+                            selected
+                            {% endif %}
+                    >
+                        Wednesday
+                    </option>
+
+                    <option value="3"
+                            {% if class_item.day_of_week == 3 %}
+                            selected
+                            {% endif %}
+                    >
+                        Thursday
+                    </option>
+
+                    <option value="4"
+                            {% if class_item.day_of_week == 4 %}
+                            selected
+                            {% endif %}
+                    >
+                        Friday
+                    </option>
+
+                    <option value="5"
+                            {% if class_item.day_of_week == 5 %}
+                            selected
+                            {% endif %}
+                    >
+                        Saturday
+                    </option>
+
+                    <option value="6"
+                            {% if class_item.day_of_week == 6 %}
+                            selected
+                            {% endif %}
+                    >
+                        Sunday
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Subject</label>
+
+                <input
+                        type="text"
+                        name="subject"
+                        value="{{ class_item.subject }}"
+                        required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>Start</label>
+
+                <input
+                        type="time"
+                        name="start_time"
+                        value="{{ class_item.start_time }}"
+                        required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>End</label>
+
+                <input
+                        type="time"
+                        name="end_time"
+                        value="{{ class_item.end_time }}"
+                        required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>Room</label>
+
+                <input
+                        type="text"
+                        name="room"
+                        value="{{ class_item.room }}"
+                >
+
+            </div>
+
+
+            <button
+                    type="submit"
+                    class="add-button"
+            >
+                Save Changes
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="{{ url_for('home') }}">
+            ← Back to schedule
+        </a>
+
+    </section>
+
+</div>
+
+<script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register(
+                "{{ url_for('static', filename='sw.js') }}"
+            );
+        });
+    }
+</script>
+
+</body>
+
+</html>

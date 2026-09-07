@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Class Schedule</title>
+
+    <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#111827">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div>
+
+            <h1>📚 Class Schedule</h1>
+
+            <p>
+                {{ today_name }}
+            </p>
+
+        </div>
+
+        <div class="header-right">
+
+            <a
+                    href="{{ url_for('settings') }}"
+                    class="settings-button"
+            >
+                🔔 Settings
+            </a>
+
+            <div class="clock">
+
+            <span id="current-time">
+                {{ current_time }}
+            </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- NEXT CLASS -->
+
+    {% if next_class %}
+
+    <section class="next-class">
+
+        <div class="next-label">
+            NEXT CLASS
+        </div>
+
+        <h2>
+            {{ next_class.class.subject }}
+        </h2>
+
+        <div class="next-details">
+
+        <span>
+            🕐
+            {{ next_class.class.start_time }}
+            –
+            {{ next_class.class.end_time }}
+        </span>
+
+            <span>
+            📍
+            {{ next_class.class.room }}
+        </span>
+
+        </div>
+
+        <div
+                class="countdown"
+                id="countdown"
+                data-start="{{ next_class.datetime.isoformat() }}"
+        >
+            Calculating...
+        </div>
+
+    </section>
+
+    {% else %}
+
+    <section class="next-class">
+
+        <div class="next-label">
+            NEXT CLASS
+        </div>
+
+        <h2>
+            No upcoming classes 🎉
+        </h2>
+
+        <p>
+            There are no classes scheduled.
+        </p>
+
+    </section>
+
+    {% endif %}
+
+    </section>
+
+
+    <!-- WEEKLY SCHEDULE -->
+
+    <section class="weekly-section">
+
+        <div class="section-header">
+
+            <h2>
+                Weekly Schedule
+            </h2>
+
+        </div>
+
+
+        <div class="schedule">
+
+            {% for day in days %}
+
+            <div class="day">
+
+                <h3>
+                    {{ day }}
+                </h3>
+
+
+                {% if schedule[day] %}
+
+                {% for class in schedule[day] %}
+
+                <div class="class-card">
+
+                    <div class="time">
+
+                        {{ class.start_time }}
+
+                        <span>–</span>
+
+                        {{ class.end_time }}
+
+                    </div>
+
+
+                    <div class="details">
+
+                        <h4>
+                            {{ class.subject }}
+                        </h4>
+
+                        <p>
+                            📍 {{ class.room }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <a
+                                href="{{ url_for(
+                                    'edit_class',
+                                    class_id=class.id
+                                ) }}"
+                                class="edit-button"
+                        >
+                            ✏️
+                        </a>
+
+
+                        <form
+                                action="{{ url_for(
+                                    'delete_class',
+                                    class_id=class.id
+                                ) }}"
+                                method="POST"
+                        >
+
+                            <button
+                                    type="submit"
+                                    class="delete-button"
+                                    onclick="return confirm(
+                                        'Delete this class?'
+                                    )"
+                            >
+                                🗑️
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+                {% else %}
+
+                <div class="no-class">
+                    No classes
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD CLASS -->
+
+    <section class="add-section">
+
+        <h2>
+            ➕ Add Class
+        </h2>
+
+        <form
+                action="{{ url_for('add_class') }}"
+                method="POST"
+                class="add-form"
+        >
+
+            <div>
+
+                <label>Day</label>
+
+                <select
+                        name="day_of_week"
+                        required
+                >
+
+                    <option value="0">Monday</option>
+
+                    <option value="1">Tuesday</option>
+
+                    <option value="2">Wednesday</option>
+
+                    <option value="3">Thursday</option>
+
+                    <option value="4">Friday</option>
+
+                    <option value="5">Saturday</option>
+
+                    <option value="6">Sunday</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Subject</label>
+
+                <input
+                        type="text"
+                        name="subject"
+                        placeholder="CSPC 103"
+                        required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>Start</label>
+
+                <input
+                        type="time"
+                        name="start_time"
+                        required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>End</label>
+
+                <input
+                        type="time"
+                        name="end_time"
+                        required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label>Room</label>
+
+                <input
+                        type="text"
+                        name="room"
+                        placeholder="3013A"
+                >
+
+            </div>
+
+
+            <button
+                    type="submit"
+                    class="add-button"
+            >
+                Add Class
+            </button>
+
+        </form>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+    function updateClock() {
+
+        const now = new Date();
+
+        const hours =
+            String(now.getHours()).padStart(2, "0");
+
+        const minutes =
+            String(now.getMinutes()).padStart(2, "0");
+
+        const seconds =
+            String(now.getSeconds()).padStart(2, "0");
+
+        document.getElementById(
+            "current-time"
+        ).textContent =
+            `${hours}:${minutes}:${seconds}`;
+    }
+
+
+    function updateCountdown() {
+
+        const countdown =
+            document.getElementById("countdown");
+
+        if (!countdown) {
+            return;
+        }
+
+        const startTime =
+            countdown.dataset.start;
+
+        if (!startTime) {
+            return;
+        }
+
+        const target =
+            new Date(startTime);
+
+        const now =
+            new Date();
+
+        let difference =
+            target.getTime() -
+            now.getTime();
+
+        if (difference <= 0) {
+
+            countdown.textContent =
+                "Starting now!";
+
+            return;
+        }
+
+        const totalSeconds =
+            Math.floor(difference / 1000);
+
+        const daysLeft =
+            Math.floor(
+                totalSeconds / 86400
+            );
+
+        const hoursLeft =
+            Math.floor(
+                (totalSeconds % 86400) / 3600
+            );
+
+        const minutesLeft =
+            Math.floor(
+                (totalSeconds % 3600) / 60
+            );
+
+        const secondsLeft =
+            totalSeconds % 60;
+
+        countdown.textContent =
+            `Starts in ${daysLeft}d ` +
+            `${hoursLeft}h ` +
+            `${minutesLeft}m ` +
+            `${secondsLeft}s`;
+    }
+
+
+    updateClock();
+
+    updateCountdown();
+
+
+    setInterval(
+        updateClock,
+        1000
+    );
+
+
+    setInterval(
+        updateCountdown,
+        1000
+    );
+
+</script>
+
+<script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register(
+                "{{ url_for('static', filename='sw.js') }}"
+            );
+        });
+    }
+</script>
+
+</body>
+
+</html>

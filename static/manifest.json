@@ -1,0 +1,10 @@
+{
+  "name": "Class Schedule",
+  "short_name": "Schedule",
+  "description": "Personal class schedule and reminders",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111827",
+  "orientation": "portrait"
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Settings</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <div>
+      <h1>🔔 Notifications</h1>
+      <p>Manage your class reminders</p>
+    </div>
+
+    <div class="header-right">
+      <a href="/" class="back-button">← Dashboard</a>
+    </div>
+  </header>
+
+
+  <!-- Notification Settings -->
+
+  <div class="settings-card">
+
+    <form method="POST" action="/settings/save">
+
+      <div class="setting-row">
+
+        <div>
+          <h3>Email Notifications</h3>
+          <p>Receive reminders before your classes.</p>
+        </div>
+
+        <label class="switch">
+          <input
+                  type="checkbox"
+                  name="enabled"
+                  {% if settings.enabled %}checked{% endif %}
+          >
+          <span class="slider"></span>
+        </label>
+
+      </div>
+
+
+      <div class="setting-field">
+
+        <label for="email">
+          Email Address
+        </label>
+
+        <input
+                type="email"
+                id="email"
+                name="email"
+                value="{{ settings.email }}"
+                placeholder="you@example.com"
+                required
+        >
+
+      </div>
+
+
+      <div class="setting-field">
+
+        <label for="minutes_before">
+          Remind me
+        </label>
+
+        <select id="minutes_before" name="minutes_before">
+
+          {% for minutes in [5, 10, 15, 30, 60] %}
+
+          <option
+                  value="{{ minutes }}"
+                  {% if settings.minutes_before == minutes %}selected{% endif %}
+          >
+            {{ minutes }} minutes before class
+          </option>
+
+          {% endfor %}
+
+        </select>
+
+      </div>
+
+
+      <button type="submit" class="save-button">
+        💾 Save Settings
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <!-- Test Email -->
+
+  <div class="settings-card">
+
+    <div class="setting-row">
+
+      <div>
+        <h3>📧 Test Email</h3>
+        <p>Send a test email to make sure notifications are working.</p>
+      </div>
+
+      <form method="POST" action="/test-email">
+        <button type="submit" class="save-button">
+          Send Test Email
+        </button>
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- Notification History -->
+
+  <div class="settings-card">
+
+    <div class="setting-row">
+      <div>
+        <h3>📋 Notification History</h3>
+        <p>Recently sent class reminders.</p>
+      </div>
+    </div>
+
+
+    {% if notification_history %}
+
+    <div class="notification-history">
+
+      {% for notification in notification_history %}
+
+      <div class="notification-item">
+
+        <div>
+          <strong>{{ notification.subject }}</strong>
+
+          <p>
+            {{ notification.class_date }}
+            · Sent {{ notification.sent_at }}
+          </p>
+        </div>
+
+        <span class="notification-status">
+                            ✓ Sent
+                        </span>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="info-card">
+      <p>No notifications have been sent yet.</p>
+    </div>
+
+    {% endif %}
+
+  </div>
+
+
+  <div class="info-card">
+
+    <h3>ℹ️ How it works</h3>
+
+    <p>
+      The app checks your schedule every minute and sends an email
+      reminder when your selected notification time is reached.
+    </p>
+
+  </div>
+
+</div>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register(
+              "{{ url_for('static', filename='sw.js') }}"
+      );
+    });
+  }
+</script>
+
+</body>
+</html>
