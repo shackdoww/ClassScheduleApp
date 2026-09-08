@@ -1,334 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-    <meta name="theme-color" content="#0b1020">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='import.css') }}">
-    <title>Scan Schedule · Class Schedule</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"><meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='import.css') }}">
+<title>Scan Schedule · Class Schedule</title>
 </head>
 <body>
 <div class="app-shell narrow-shell">
-    <header class="topbar reveal">
-        <div>
-            <div class="eyebrow">IMPORT</div>
-            <h1>Scan your schedule</h1>
-            <p class="date-line">Take a photo of the printed timetable and we'll turn it into editable classes.</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="icon-button" aria-label="Back">←</a>
-    </header>
-
-    <section class="scan-card reveal">
-        <div class="scan-icon">⌁</div>
-        <div>
-            <div class="eyebrow">CAMERA / PHOTO</div>
-            <h2>Import from paper</h2>
-            <p class="muted">Your phone camera can capture a paper schedule, or you can choose an existing photo.</p>
-        </div>
-    </section>
-
-    <section class="page-section reveal delay-1">
-        <div class="section-title-row">
-            <div><div class="eyebrow">STEP 1</div><h2>Capture the timetable</h2></div>
-            <span class="section-badge">OCR</span>
-        </div>
-
-        <label class="upload-box" for="schedule-photo">
-            <div class="upload-orb">＋</div>
-            <strong>Take a photo or choose an image</strong>
-            <span>Best results: bright light, flat paper, all columns visible.</span>
-        </label>
-        <input id="schedule-photo" type="file" accept="image/*" capture="environment" hidden>
-
-        <div class="scan-tips">
-            <div><b>✓</b><span>Keep the whole timetable inside the frame.</span></div>
-            <div><b>✓</b><span>Avoid shadows, glare, folds, and blur.</span></div>
-            <div><b>✓</b><span>Make small text readable before scanning.</span></div>
-        </div>
-
-        <div id="image-preview-wrap" class="preview-wrap hidden">
-            <div class="preview-head"><strong>Photo</strong><button id="retake" class="secondary-button" type="button">Choose another</button></div>
-            <img id="image-preview" alt="Selected schedule">
-        </div>
-
-        <button id="scan-button" class="primary-button hidden" type="button">Scan timetable <span>→</span></button>
-        <div id="progress-wrap" class="progress-wrap hidden">
-            <div class="progress-label"><span id="progress-text">Preparing OCR…</span><span id="progress-percent">0%</span></div>
-            <div class="progress-track"><div id="progress-bar"></div></div>
-        </div>
-        <div id="scan-error" class="flash error hidden"></div>
-    </section>
-
-    <section id="review-section" class="page-section reveal hidden">
-        <div class="section-title-row">
-            <div><div class="eyebrow">STEP 2</div><h2>Review and fix</h2></div>
-            <span id="row-count" class="section-badge">0 ROWS</span>
-        </div>
-        <p class="muted review-help">OCR is only a first pass. Check every row before importing. You can change the day, subject, time, or room.</p>
-
-        <div id="warnings" class="warning-box hidden"></div>
-        <div id="class-rows" class="import-rows"></div>
-
-        <div class="raw-ocr">
-            <button id="toggle-raw" class="secondary-button" type="button">Show raw OCR text</button>
-            <textarea id="raw-text" spellcheck="false" placeholder="Recognized text will appear here…"></textarea>
-        </div>
-
-        <div class="review-actions">
-            <button id="add-row" class="secondary-button" type="button">＋ Add row</button>
-            <button id="import-button" class="primary-button" type="button">Import checked classes <span>→</span></button>
-        </div>
-        <div id="import-result" class="flash hidden"></div>
-    </section>
-
-    <section class="tip-card reveal delay-2">
-        <span>🔒</span>
-        <div><strong>Privacy-friendly design</strong><p>The OCR runs in your browser with Tesseract.js. The schedule photo itself is not uploaded to the server by this page.</p></div>
-    </section>
+<header class="topbar reveal"><div><div class="eyebrow">IMPORT</div><h1>Scan your schedule</h1><p class="date-line">Take a clear photo of the printed timetable and we'll turn it into editable classes.</p></div><a href="{{ url_for('home') }}" class="icon-button" aria-label="Back">←</a></header>
+<section class="scan-card reveal"><div class="scan-icon">⌁</div><div><div class="eyebrow">CAMERA SCANNER</div><h2>Import from paper</h2><p class="muted">On phones, take a fresh photo with your camera. On computers, choose a schedule image from your files.</p></div></section>
+<section class="page-section reveal delay-1">
+<div class="section-title-row"><div><div class="eyebrow">STEP 1</div><h2>Capture the timetable</h2></div><span class="section-badge">OCR</span></div>
+<div id="mobile-capture" class="capture-option mobile-only"><button id="camera-button" class="primary-button camera-button" type="button">📷 Take schedule photo <span>→</span></button><p class="capture-note">Your phone camera will open. Keep the complete timetable visible and hold the phone steady.</p></div>
+<div id="desktop-picker" class="desktop-only"><label class="upload-box" for="schedule-photo"><div class="upload-orb">＋</div><strong>Choose schedule image</strong><span>Select a JPG, PNG, WEBP, or similar image from your computer.</span></label></div>
+<input id="schedule-photo" type="file" accept="image/*" capture="environment" hidden>
+<div class="scan-tips"><div><b>✓</b><span>Keep the whole timetable inside the frame.</span></div><div><b>✓</b><span>Use bright, even lighting and avoid glare or shadows.</span></div><div><b>✓</b><span>Make sure small subject, time, and room text is readable.</span></div></div>
+<div id="image-preview-wrap" class="preview-wrap hidden"><div class="preview-head"><strong>Schedule image</strong><button id="retake" class="secondary-button" type="button">Take another photo</button></div><img id="image-preview" alt="Selected schedule"></div>
+<button id="scan-button" class="primary-button hidden" type="button">Scan timetable <span>→</span></button>
+<div id="progress-wrap" class="progress-wrap hidden"><div class="progress-label"><span id="progress-text">Preparing OCR…</span><span id="progress-percent">0%</span></div><div class="progress-track"><div id="progress-bar"></div></div></div>
+<div id="scan-error" class="flash error hidden"></div>
+</section>
+<section id="review-section" class="page-section reveal hidden">
+<div class="section-title-row"><div><div class="eyebrow">STEP 2</div><h2>Review and fix</h2></div><span id="row-count" class="section-badge">0 ROWS</span></div>
+<p class="muted review-help">OCR is only a first pass. Check every row before importing. You can change the day, subject, time, or room.</p>
+<div id="warnings" class="warning-box hidden"></div><div id="class-rows" class="import-rows"></div>
+<div class="raw-ocr"><button id="toggle-raw" class="secondary-button" type="button">Show raw OCR text</button><textarea id="raw-text" spellcheck="false" placeholder="Recognized text will appear here…"></textarea></div>
+<div class="review-actions"><button id="add-row" class="secondary-button" type="button">＋ Add row</button><button id="import-button" class="primary-button" type="button">Import checked classes <span>→</span></button></div>
+<div id="import-result" class="flash hidden"></div>
+</section>
+<section class="tip-card reveal delay-2"><span>🔒</span><div><strong>Privacy-friendly design</strong><p>The OCR runs in your browser with Tesseract.js. The schedule photo itself is not uploaded to the server by this page.</p></div></section>
 </div>
-
-<nav class="bottom-nav">
-    <a href="{{ url_for('home') }}#schedule" class="nav-item"><span>▦</span><small>Schedule</small></a>
-    <a href="{{ url_for('import_schedule') }}" class="nav-item active"><span>⌁</span><small>Scan</small></a>
-    <a href="{{ url_for('home') }}#add" class="nav-item"><span>＋</span><small>Add</small></a>
-    <a href="{{ url_for('settings') }}" class="nav-item"><span>⚙</span><small>Settings</small></a>
-</nav>
-
+<nav class="bottom-nav"><a href="{{ url_for('home') }}#schedule" class="nav-item"><span>▦</span><small>Schedule</small></a><a href="{{ url_for('import_schedule') }}" class="nav-item active"><span>⌁</span><small>Scan</small></a><a href="{{ url_for('home') }}#add" class="nav-item"><span>＋</span><small>Add</small></a><a href="{{ url_for('settings') }}" class="nav-item"><span>⚙</span><small>Settings</small></a></nav>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-const DAYS = {{ days|tojson }};
-const photoInput = document.getElementById('schedule-photo');
-const previewWrap = document.getElementById('image-preview-wrap');
-const preview = document.getElementById('image-preview');
-const scanButton = document.getElementById('scan-button');
-const progressWrap = document.getElementById('progress-wrap');
-const progressText = document.getElementById('progress-text');
-const progressPercent = document.getElementById('progress-percent');
-const progressBar = document.getElementById('progress-bar');
-const errorBox = document.getElementById('scan-error');
-const review = document.getElementById('review-section');
-const rowsWrap = document.getElementById('class-rows');
-const rowCount = document.getElementById('row-count');
-const warningBox = document.getElementById('warnings');
-const rawText = document.getElementById('raw-text');
-let rows = [];
-
-const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-const timePattern = /(\d{1,2})\s*[:.]\s*(\d{2})(?:\s*([AP]M))?/ig;
-
-function normalizeTime(h, m, meridiem) {
-    let hour = Number(h), minute = Number(m);
-    if (minute > 59 || hour > 23) return null;
-    if (meridiem) {
-        const ap = meridiem.toUpperCase();
-        if (hour === 12) hour = 0;
-        if (ap === 'PM') hour += 12;
-    }
-    return `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
-}
-
-function findDay(text) {
-    const t = text.toLowerCase();
-    for (let i = 0; i < DAYS.length; i++) {
-        const full = DAYS[i].toLowerCase();
-        const short = full.slice(0,3);
-        if (t.includes(full) || new RegExp(`\\b${short}\\b`, 'i').test(t)) return i;
-    }
-    return null;
-}
-
-function parseTimes(text) {
-    const result = [];
-    let match;
-    while ((match = timePattern.exec(text)) !== null) {
-        const value = normalizeTime(match[1], match[2], match[3]);
-        if (value) result.push({value, index: match.index, length: match[0].length});
-    }
-    timePattern.lastIndex = 0;
-    return result.slice(0,2);
-}
-
-function guessSubjectAndRoom(line, times) {
-    let cleaned = line;
-    times.slice().reverse().forEach(t => cleaned = cleaned.slice(0,t.index) + cleaned.slice(t.index + t.length));
-    cleaned = cleaned.replace(/[|]/g, ' ').replace(/\s{2,}/g, ' ').trim();
-    const roomMatch = cleaned.match(/(?:room|rm\.?|venue|loc\.?|bldg\.?|building)\s*[:\-]?\s*(.*)$/i);
-    let room = roomMatch ? roomMatch[1].trim() : '';
-    if (roomMatch) cleaned = cleaned.slice(0, roomMatch.index).trim();
-    if (!room) {
-        const pieces = cleaned.split(/\s{3,}|\t/).map(x => x.trim()).filter(Boolean);
-        if (pieces.length > 1) { room = pieces.at(-1); cleaned = pieces.slice(0,-1).join(' '); }
-    }
-    const subject = cleaned.replace(/^[-:–—]+|[-:–—]+$/g,'').trim();
-    return {subject, room: room || 'NOT SET'};
-}
-
-function buildRows(lines) {
-    let currentDay = null;
-    const parsed = [];
-    for (let raw of lines) {
-        const line = raw.trim();
-        if (!line) continue;
-        const day = findDay(line);
-        if (day !== null) currentDay = day;
-        const times = parseTimes(line);
-        if (!times.length) continue;
-        if (times.length >= 2) {
-            const info = guessSubjectAndRoom(line, times);
-            if (info.subject) parsed.push({enabled:true, day_of_week: currentDay, subject:info.subject, start_time:times[0].value, end_time:times[1].value, room:info.room});
-        } else {
-            const start = times[0].value;
-            const after = line.slice(times[0].index + times[0].length).trim().replace(/^[-–—:]+/,'').trim();
-            const before = line.slice(0, times[0].index).trim();
-            const info = guessSubjectAndRoom((before + ' ' + after).trim(), []);
-            if (info.subject) parsed.push({enabled:true, day_of_week: currentDay, subject:info.subject, start_time:start, end_time:'', room:info.room});
-        }
-    }
-    return parsed;
-}
-
-function renderRows() {
-    rowsWrap.innerHTML = rows.map((r, i) => `
-      <article class="import-row ${r.day_of_week === null ? 'needs-attention' : ''}">
-        <div class="row-top"><label class="keep-row"><input type="checkbox" data-i="${i}" class="row-enabled" ${r.enabled !== false ? 'checked':''}><span>Import</span></label><span class="row-number">#${i+1}</span></div>
-        <div class="row-grid">
-          <div class="field"><label>Day</label><select data-i="${i}" data-key="day_of_week"><option value="">Choose day</option>${DAYS.map((d,j)=>`<option value="${j}" ${Number(r.day_of_week)===j?'selected':''}>${d}</option>`).join('')}</select></div>
-          <div class="field"><label>Subject</label><input data-i="${i}" data-key="subject" value="${esc(r.subject)}" placeholder="e.g. CSPC 103"></div>
-          <div class="field"><label>Start</label><input data-i="${i}" data-key="start_time" type="time" value="${esc(r.start_time)}"></div>
-          <div class="field"><label>End</label><input data-i="${i}" data-key="end_time" type="time" value="${esc(r.end_time)}"></div>
-          <div class="field field-wide"><label>Room</label><input data-i="${i}" data-key="room" value="${esc(r.room)}" placeholder="Room / venue"></div>
-        </div>
-        <button type="button" class="delete-row" data-delete="${i}" aria-label="Remove row">Remove</button>
-      </article>
-    `).join('');
-    rowCount.textContent = `${rows.length} ROW${rows.length === 1 ? '' : 'S'}`;
-    updateWarnings();
-}
-
-function updateWarnings() {
-    const warnings = [];
-    rows.forEach((r,i) => {
-        if (r.enabled === false) return;
-        if (r.day_of_week === null || r.day_of_week === '') warnings.push(`Row ${i+1}: day was not recognized.`);
-        if (!r.subject) warnings.push(`Row ${i+1}: subject is empty.`);
-        if (!r.start_time || !r.end_time) warnings.push(`Row ${i+1}: check both start and end time.`);
-        if (r.start_time && r.end_time && r.end_time <= r.start_time) warnings.push(`Row ${i+1}: end time must be later than start time.`);
-    });
-    if (!warnings.length) { warningBox.classList.add('hidden'); warningBox.innerHTML=''; return; }
-    warningBox.classList.remove('hidden');
-    warningBox.innerHTML = `<strong>Check these before importing</strong><ul>${warnings.slice(0,12).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
-}
-
-function exposeReview(text) {
-    rows = buildRows(text.split(/\r?\n/));
-    rawText.value = text;
-    review.classList.remove('hidden');
-    renderRows();
-    review.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-photoInput.addEventListener('change', () => {
-    const file = photoInput.files?.[0];
-    if (!file) return;
-    errorBox.classList.add('hidden');
-    const url = URL.createObjectURL(file);
-    preview.src = url;
-    previewWrap.classList.remove('hidden');
-    scanButton.classList.remove('hidden');
-});
-
-document.getElementById('retake').addEventListener('click', () => photoInput.click());
-
-document.getElementById('scan-button').addEventListener('click', async () => {
-    const file = photoInput.files?.[0];
-    if (!file) return;
-    scanButton.disabled = true;
-    progressWrap.classList.remove('hidden');
-    errorBox.classList.add('hidden');
-    try {
-        const result = await Tesseract.recognize(file, 'eng', {
-            logger: msg => {
-                if (msg.status) progressText.textContent = msg.status.replace(/\s+/g,' ').replace(/^./, c=>c.toUpperCase());
-                if (typeof msg.progress === 'number') {
-                    const p = Math.round(msg.progress * 100);
-                    progressPercent.textContent = `${p}%`;
-                    progressBar.style.width = `${p}%`;
-                }
-            }
-        });
-        exposeReview(result.data.text || '');
-    } catch (e) {
-        errorBox.textContent = 'The scan failed. Try a clearer, brighter photo and scan again.';
-        errorBox.classList.remove('hidden');
-    } finally {
-        scanButton.disabled = false;
-    }
-});
-
-rowsWrap.addEventListener('input', e => {
-    const i = e.target.dataset.i;
-    const key = e.target.dataset.key;
-    if (i !== undefined && key) rows[Number(i)][key] = e.target.value;
-    updateWarnings();
-});
-rowsWrap.addEventListener('change', e => {
-    const i = e.target.dataset.i;
-    if (i === undefined) return;
-    if (e.target.classList.contains('row-enabled')) rows[Number(i)].enabled = e.target.checked;
-    else if (e.target.dataset.key === 'day_of_week') rows[Number(i)].day_of_week = e.target.value === '' ? null : Number(e.target.value);
-    updateWarnings();
-});
-rowsWrap.addEventListener('click', e => {
-    const button = e.target.closest('[data-delete]');
-    if (!button) return;
-    rows.splice(Number(button.dataset.delete), 1);
-    renderRows();
-});
-
-document.getElementById('add-row').addEventListener('click', () => {
-    rows.push({enabled:true,day_of_week:null,subject:'',start_time:'',end_time:'',room:'NOT SET'});
-    renderRows();
-    rowsWrap.lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'});
-});
-
-document.getElementById('toggle-raw').addEventListener('click', e => {
-    const showing = !rawText.classList.toggle('visible');
-    e.target.textContent = showing ? 'Show raw OCR text' : 'Hide raw OCR text';
-});
-
-document.getElementById('import-button').addEventListener('click', async () => {
-    const selected = rows.filter(r => r.enabled !== false).map(r => ({
-        day_of_week: r.day_of_week,
-        subject: r.subject,
-        start_time: r.start_time,
-        end_time: r.end_time,
-        room: r.room
-    }));
-    if (!selected.length) return;
-    if (selected.some(r => r.day_of_week === null || !r.subject || !r.start_time || !r.end_time || r.end_time <= r.start_time)) {
-        warningBox.classList.remove('hidden');
-        warningBox.scrollIntoView({behavior:'smooth',block:'center'});
-        return;
-    }
-    const button = document.getElementById('import-button');
-    button.disabled = true;
-    try {
-        const response = await fetch('{{ url_for("import_classes_api") }}', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({classes:selected})});
-        const data = await response.json();
-        const result = document.getElementById('import-result');
-        result.classList.remove('hidden');
-        result.classList.toggle('success', !!data.ok);
-        result.classList.toggle('error', !data.ok);
-        result.textContent = data.ok ? `Imported ${data.added} class${data.added === 1 ? '' : 'es'}${data.skipped ? ` · ${data.skipped} duplicate${data.skipped === 1 ? '' : 's'} skipped` : ''}.` : (data.error || 'Import failed.');
-        if (data.ok) setTimeout(() => window.location.href = '{{ url_for("home") }}', 900);
-    } catch (e) {
-        const result = document.getElementById('import-result');
-        result.className = 'flash error';
-        result.textContent = 'Could not save the imported classes. Check your connection and try again.';
-    } finally { button.disabled = false; }
-});
+const DAYS={{ days|tojson }};const photoInput=document.getElementById('schedule-photo'),previewWrap=document.getElementById('image-preview-wrap'),preview=document.getElementById('image-preview'),scanButton=document.getElementById('scan-button'),progressWrap=document.getElementById('progress-wrap'),progressText=document.getElementById('progress-text'),progressPercent=document.getElementById('progress-percent'),progressBar=document.getElementById('progress-bar'),errorBox=document.getElementById('scan-error'),review=document.getElementById('review-section'),rowsWrap=document.getElementById('class-rows'),rowCount=document.getElementById('row-count'),warningBox=document.getElementById('warnings'),rawText=document.getElementById('raw-text');let rows=[];
+const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));const timePattern=/(\d{1,2})\s*[:.]\s*(\d{2})(?:\s*([AP]M))?/ig;
+function isPhoneLike(){return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||window.matchMedia('(pointer: coarse)').matches}
+function updateCaptureMode(){const phone=isPhoneLike();document.body.classList.toggle('phone-mode',phone);document.body.classList.toggle('desktop-mode',!phone);document.getElementById('mobile-capture').classList.toggle('hidden',!phone);document.getElementById('desktop-picker').classList.toggle('hidden',phone);document.getElementById('retake').textContent=phone?'Take another photo':'Choose another image'}
+function normalizeTime(h,m,meridiem){let hour=Number(h),minute=Number(m);if(minute>59||hour>23)return null;if(meridiem){const ap=meridiem.toUpperCase();if(hour===12)hour=0;if(ap==='PM')hour+=12}return `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`}
+function findDay(text){const t=text.toLowerCase();for(let i=0;i<DAYS.length;i++){const full=DAYS[i].toLowerCase(),short=full.slice(0,3);if(t.includes(full)||new RegExp(`\\b${short}\\b`,'i').test(t))return i}return null}
+function parseTimes(text){const result=[];let match;while((match=timePattern.exec(text))!==null){const value=normalizeTime(match[1],match[2],match[3]);if(value)result.push({value,index:match.index,length:match[0].length})}timePattern.lastIndex=0;return result.slice(0,2)}
+function guessSubjectAndRoom(line,times){let cleaned=line;times.slice().reverse().forEach(t=>cleaned=cleaned.slice(0,t.index)+cleaned.slice(t.index+t.length));cleaned=cleaned.replace(/[|]/g,' ').replace(/\s{2,}/g,' ').trim();const roomMatch=cleaned.match(/(?:room|rm\.?|venue|loc\.?|bldg\.?|building)\s*[:\-]?\s*(.*)$/i);let room=roomMatch?roomMatch[1].trim():'';if(roomMatch)cleaned=cleaned.slice(0,roomMatch.index).trim();if(!room){const pieces=cleaned.split(/\s{3,}|\t/).map(x=>x.trim()).filter(Boolean);if(pieces.length>1){room=pieces.at(-1);cleaned=pieces.slice(0,-1).join(' ')}}return{subject:cleaned.replace(/^[-:–—]+|[-:–—]+$/g,'').trim(),room:room||'NOT SET'}}
+function buildRows(lines){let currentDay=null;const parsed=[];for(let raw of lines){const line=raw.trim();if(!line)continue;const day=findDay(line);if(day!==null)currentDay=day;const times=parseTimes(line);if(!times.length)continue;if(times.length>=2){const info=guessSubjectAndRoom(line,times);if(info.subject)parsed.push({enabled:true,day_of_week:currentDay,subject:info.subject,start_time:times[0].value,end_time:times[1].value,room:info.room})}else{const start=times[0].value,after=line.slice(times[0].index+times[0].length).trim().replace(/^[-–—:]+/,'').trim(),before=line.slice(0,times[0].index).trim(),info=guessSubjectAndRoom((before+' '+after).trim(),[]);if(info.subject)parsed.push({enabled:true,day_of_week:currentDay,subject:info.subject,start_time:start,end_time:'',room:info.room})}}return parsed}
+function renderRows(){rowsWrap.innerHTML=rows.map((r,i)=>`<article class="import-row ${r.day_of_week===null?'needs-attention':''}"><div class="row-top"><label class="keep-row"><input type="checkbox" data-i="${i}" class="row-enabled" ${r.enabled!==false?'checked':''}><span>Import</span></label><span class="row-number">#${i+1}</span></div><div class="row-grid"><div class="field"><label>Day</label><select data-i="${i}" data-key="day_of_week"><option value="">Choose day</option>${DAYS.map((d,j)=>`<option value="${j}" ${Number(r.day_of_week)===j?'selected':''}>${d}</option>`).join('')}</select></div><div class="field"><label>Subject</label><input data-i="${i}" data-key="subject" value="${esc(r.subject)}" placeholder="e.g. CSPC 103"></div><div class="field"><label>Start</label><input data-i="${i}" data-key="start_time" type="time" value="${esc(r.start_time)}"></div><div class="field"><label>End</label><input data-i="${i}" data-key="end_time" type="time" value="${esc(r.end_time)}"></div><div class="field field-wide"><label>Room</label><input data-i="${i}" data-key="room" value="${esc(r.room)}" placeholder="Room / venue"></div></div><button type="button" class="delete-row" data-delete="${i}" aria-label="Remove row">Remove</button></article>`).join('');rowCount.textContent=`${rows.length} ROW${rows.length===1?'':'S'}`;updateWarnings()}
+function updateWarnings(){const warnings=[];rows.forEach((r,i)=>{if(r.enabled===false)return;if(r.day_of_week===null||r.day_of_week==='')warnings.push(`Row ${i+1}: day was not recognized.`);if(!r.subject)warnings.push(`Row ${i+1}: subject is empty.`);if(!r.start_time||!r.end_time)warnings.push(`Row ${i+1}: check both start and end time.`);if(r.start_time&&r.end_time&&r.end_time<=r.start_time)warnings.push(`Row ${i+1}: end time must be later than start time.`)});if(!warnings.length){warningBox.classList.add('hidden');warningBox.innerHTML='';return}warningBox.classList.remove('hidden');warningBox.innerHTML=`<strong>Check these before importing</strong><ul>${warnings.slice(0,12).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`}
+function exposeReview(text){rows=buildRows(text.split(/\r?\n/));rawText.value=text;review.classList.remove('hidden');renderRows();review.scrollIntoView({behavior:'smooth',block:'start'})}
+function showSelectedFile(file){if(!file)return;errorBox.classList.add('hidden');preview.src=URL.createObjectURL(file);previewWrap.classList.remove('hidden');scanButton.classList.remove('hidden')}
+photoInput.addEventListener('change',()=>showSelectedFile(photoInput.files?.[0]));document.getElementById('camera-button').addEventListener('click',()=>photoInput.click());document.getElementById('retake').addEventListener('click',()=>photoInput.click());
+document.getElementById('scan-button').addEventListener('click',async()=>{const file=photoInput.files?.[0];if(!file)return;scanButton.disabled=true;progressWrap.classList.remove('hidden');errorBox.classList.add('hidden');try{const result=await Tesseract.recognize(file,'eng',{logger:msg=>{if(msg.status)progressText.textContent=msg.status.replace(/\s+/g,' ').replace(/^./,c=>c.toUpperCase());if(typeof msg.progress==='number'){const p=Math.round(msg.progress*100);progressPercent.textContent=`${p}%`;progressBar.style.width=`${p}%`}}});exposeReview(result.data.text||'')}catch(e){errorBox.textContent='The scan failed. Try a clearer, brighter photo and scan again.';errorBox.classList.remove('hidden')}finally{scanButton.disabled=false}});
+rowsWrap.addEventListener('input',e=>{const i=e.target.dataset.i,key=e.target.dataset.key;if(i!==undefined&&key)rows[Number(i)][key]=e.target.value;updateWarnings()});rowsWrap.addEventListener('change',e=>{const i=e.target.dataset.i;if(i===undefined)return;if(e.target.classList.contains('row-enabled'))rows[Number(i)].enabled=e.target.checked;else if(e.target.dataset.key==='day_of_week')rows[Number(i)].day_of_week=e.target.value===''?null:Number(e.target.value);updateWarnings()});rowsWrap.addEventListener('click',e=>{const button=e.target.closest('[data-delete]');if(!button)return;rows.splice(Number(button.dataset.delete),1);renderRows()});
+document.getElementById('add-row').addEventListener('click',()=>{rows.push({enabled:true,day_of_week:null,subject:'',start_time:'',end_time:'',room:'NOT SET'});renderRows();rowsWrap.lastElementChild?.scrollIntoView({behavior:'smooth',block:'center'})});document.getElementById('toggle-raw').addEventListener('click',()=>{rawText.classList.toggle('visible');document.getElementById('toggle-raw').textContent=rawText.classList.contains('visible')?'Hide raw OCR text':'Show raw OCR text'});
+document.getElementById('import-button').addEventListener('click',async()=>{const valid=rows.filter(r=>r.enabled!==false).map(r=>({...r}));if(!valid.length){alert('Select at least one class to import.');return}updateWarnings();const bad=valid.some(r=>r.day_of_week===null||r.day_of_week===''||!r.subject||!r.start_time||!r.end_time||r.end_time<=r.start_time);if(bad){alert('Please fix the highlighted rows before importing.');return}const button=document.getElementById('import-button'),resultBox=document.getElementById('import-result');button.disabled=true;try{const response=await fetch('{{ url_for("import_classes_api") }}',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({classes:valid})});const data=await response.json();if(!response.ok||!data.success)throw new Error(data.error||'Import failed.');resultBox.textContent=`${data.imported} class${data.imported===1?'':'es'} imported successfully.`;resultBox.className='flash success';setTimeout(()=>window.location.href='{{ url_for("home") }}',800)}catch(e){resultBox.textContent=e.message||'Import failed. Try again.';resultBox.className='flash error'}finally{button.disabled=false}});
+updateCaptureMode();window.addEventListener('resize',updateCaptureMode);
 </script>
-</body>
-</html>
+</body></html>
