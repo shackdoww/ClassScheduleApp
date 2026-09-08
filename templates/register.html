@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#0b1020"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Create account · Class Schedule</title></head>
+<body class="auth-body">
+<main class="auth-shell">
+    <div class="auth-logo">＋</div>
+    <div class="eyebrow">NORTH DAVAO MINDANAO UNIVERSITY</div>
+    <h1>Create your account</h1>
+    <p class="auth-subtitle">Your timetable is private to your account. Register using your NDMU institutional email.</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+    <section class="auth-card">
+        <form method="POST">
+            <div class="field"><label for="email">Institutional email</label><input id="email" name="email" type="email" placeholder="you@ndmu.edu.ph" pattern=".+@ndmu\.edu\.ph$" required autocomplete="email"><small class="field-note">Must end in @ndmu.edu.ph</small></div>
+            <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" placeholder="At least 8 characters" minlength="8" required autocomplete="new-password"></div>
+            <div class="field"><label for="confirm_password">Confirm password</label><input id="confirm_password" name="confirm_password" type="password" placeholder="Enter it again" minlength="8" required autocomplete="new-password"></div>
+            <button class="primary-button" type="submit">Create Account <span>→</span></button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+    </section>
+    <p class="auth-note">Each account gets its own schedule, reminders, and notification history.</p>
+</main>
+</body>
+</html>
