@@ -1,63 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0b1020">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#0b1020">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Settings · Class Schedule</title>
 </head>
 <body>
 <div class="app-shell narrow-shell">
-    <header class="topbar reveal">
-        <div>
-            <div class="eyebrow">PREFERENCES</div>
-            <h1>Notifications</h1>
-            <p class="date-line">Control when class reminders reach you</p>
-        </div>
-        <a href="{{ url_for('home') }}" class="icon-button" aria-label="Back to dashboard">←</a>
-    </header>
+    <header class="topbar reveal"><div><div class="eyebrow">ACCOUNT & PREFERENCES</div><h1>Settings</h1><p class="date-line">{{ user.email }}</p></div><a href="{{ url_for('home') }}" class="icon-button" aria-label="Back">←</a></header>
 
-    <section class="page-section settings-hero reveal delay-1">
-        <div class="settings-icon">🔔</div>
-        <div><div class="eyebrow">REMINDERS</div><h2>Stay ahead of class</h2><p>Choose where and when your reminders arrive.</p></div>
-    </section>
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+
+    <section class="page-section settings-hero reveal delay-1"><div class="settings-icon">🔔</div><div><div class="eyebrow">REMINDERS</div><h2>Stay ahead of class</h2><p>These settings belong only to your account.</p></div></section>
 
     <section class="page-section reveal delay-2">
-        <form method="POST" action="/settings/save">
-            <div class="setting-main-row">
-                <div class="setting-copy"><h3>Email notifications</h3><p>Receive a reminder before each upcoming class.</p></div>
-                <label class="switch"><input type="checkbox" name="enabled" {% if settings.enabled %}checked{% endif %}><span class="slider"></span></label>
-            </div>
-            <div class="field"><label for="email">Email address</label><input type="email" id="email" name="email" value="{{ settings.email }}" placeholder="you@example.com" required></div>
+        <form method="POST" action="{{ url_for('save_settings') }}">
+            <div class="setting-main-row"><div class="setting-copy"><h3>Email notifications</h3><p>Receive a reminder before each upcoming class.</p></div><label class="switch"><input type="checkbox" name="enabled" {% if settings.enabled %}checked{% endif %}><span class="slider"></span></label></div>
+            <div class="field"><label for="email">Institutional email</label><input type="email" id="email" name="email" value="{{ settings.email }}" placeholder="you@ndmu.edu.ph" pattern=".+@ndmu\.edu\.ph$" required><small class="field-note">Only @ndmu.edu.ph addresses are accepted.</small></div>
             <div class="field"><label for="minutes_before">Reminder timing</label><select id="minutes_before" name="minutes_before">{% for minutes in [5,10,15,30,60] %}<option value="{{ minutes }}" {% if settings.minutes_before == minutes %}selected{% endif %}>{{ minutes }} minutes before class</option>{% endfor %}</select></div>
             <button type="submit" class="primary-button">Save Settings <span>→</span></button>
         </form>
     </section>
 
-    <section class="page-section reveal delay-3">
-        <div class="section-title-row"><div><div class="eyebrow">CONNECTION TEST</div><h2>Test email</h2></div><span class="status-orb">✉</span></div>
-        <p class="muted">Send a test message to confirm your Gmail notification setup is working.</p>
-        <form method="POST" action="/test-email"><button type="submit" class="secondary-button">Send Test Email <span>↗</span></button></form>
-    </section>
+    <section class="page-section reveal delay-3"><div class="section-title-row"><div><div class="eyebrow">CONNECTION TEST</div><h2>Test email</h2></div><span class="status-orb">✉</span></div><p class="muted">Send a test reminder to your institutional address.</p><form method="POST" action="{{ url_for('test_email') }}"><button type="submit" class="secondary-button">Send Test Email <span>↗</span></button></form></section>
 
-    <section class="page-section reveal delay-4">
-        <div class="section-title-row"><div><div class="eyebrow">ACTIVITY</div><h2>Notification history</h2></div><span class="section-badge">LAST 20</span></div>
-        {% if notification_history %}
-        <div class="notification-history">
-            {% for notification in notification_history %}
-            <div class="notification-item"><div><strong>{{ notification.subject }}</strong><p>{{ notification.class_date }} · {{ notification.sent_at }}</p></div><span class="sent-badge">✓ SENT</span></div>
-            {% endfor %}
-        </div>
-        {% else %}<div class="empty-state"><span>◌</span><strong>No notifications yet</strong><p>Sent reminders will appear here.</p></div>{% endif %}
-    </section>
+    <section class="page-section reveal delay-4"><div class="section-title-row"><div><div class="eyebrow">ACTIVITY</div><h2>Notification history</h2></div><span class="section-badge">LAST 20</span></div>{% if notification_history %}<div class="notification-history">{% for notification in notification_history %}<div class="notification-item"><div><strong>{{ notification.subject }}</strong><p>{{ notification.class_date }} · {{ notification.sent_at }}</p></div><span class="sent-badge">✓ SENT</span></div>{% endfor %}</div>{% else %}<div class="empty-state"><span>◌</span><strong>No notifications yet</strong><p>Sent reminders will appear here.</p></div>{% endif %}</section>
 
-    <section class="tip-card reveal delay-4"><span>💡</span><div><strong>How it works</strong><p>The scheduler checks your timetable every minute and sends a reminder when your selected window is reached.</p></div></section>
+    <section class="page-section account-card reveal delay-4"><div class="section-title-row"><div><div class="eyebrow">ACCOUNT</div><h2>Your account</h2></div><span class="status-orb">👤</span></div><p class="muted account-email">{{ user.email }}</p><form method="POST" action="{{ url_for('logout') }}"><button type="submit" class="secondary-button logout-button">Log out <span>↗</span></button></form></section>
+
+    <section class="tip-card reveal delay-4"><span>💡</span><div><strong>How it works</strong><p>The scheduler checks your timetable every minute and sends reminders using your account's settings.</p></div></section>
 </div>
-
 <nav class="bottom-nav"><a href="{{ url_for('home') }}" class="nav-item"><span>▦</span><small>Schedule</small></a><a href="{{ url_for('home') }}#add" class="nav-item"><span>＋</span><small>Add</small></a><a href="{{ url_for('settings') }}" class="nav-item active"><span>⚙</span><small>Settings</small></a></nav>
-<script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}"));</script>
+<script>if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}"));</script>
 </body>
 </html>
