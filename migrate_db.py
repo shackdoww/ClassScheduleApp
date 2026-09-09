@@ -1,5 +1,6 @@
 import sqlite3
 import secrets
+import re
 
 DB = "schedule.db"
 
@@ -10,10 +11,25 @@ def add_column(db, table, name, spec):
     if name not in columns(db, table):
         db.execute(f"ALTER TABLE {table} ADD COLUMN {name} {spec}")
 
+def unique_username(db, base):
+    base = re.sub(r"[^A-Za-z0-9_.-]", "", (base or "").strip())[:30] or "user"
+    candidate = base
+    n = 2
+    while db.execute("SELECT 1 FROM users WHERE username=? COLLATE NOCASE", (candidate,)).fetchone():
+        suffix = str(n)
+        candidate = f"{base[:30-len(suffix)]}{suffix}"
+        n += 1
+    return candidate
+
 def main():
     db = sqlite3.connect(DB)
     db.row_factory = sqlite3.Row
     db.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,created_at TEXT NOT NULL)")
+    add_column(db, "users", "username", "TEXT")
+    for row in db.execute("SELECT id,email FROM users WHERE username IS NULL OR username='' ORDER BY id").fetchall():
+        base = (row["email"] or "").split("@", 1)[0]
+        db.execute("UPDATE users SET username=? WHERE id=?", (unique_username(db, base), row["id"]))
+    db.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username COLLATE NOCASE)")
     add_column(db, "users", "share_token", "TEXT")
     db.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_share_token ON users(share_token)")
     for row in db.execute("SELECT id FROM users WHERE share_token IS NULL OR share_token='' ").fetchall():
