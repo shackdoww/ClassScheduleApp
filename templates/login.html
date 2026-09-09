@@ -4,19 +4,19 @@
 <body class="auth-body">
 <main class="auth-shell">
     <div class="auth-logo">▦</div>
-    <div class="eyebrow">NORTH DAVAO MINDANAO UNIVERSITY</div>
+    <div class="eyebrow">CLASS SCHEDULE</div>
     <h1>Welcome back</h1>
-    <p class="auth-subtitle">Sign in with your institutional account to access your personal class schedule.</p>
+    <p class="auth-subtitle">Sign in to access your personal schedule, planner, tasks, and reminders.</p>
     {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
     <section class="auth-card">
         <form method="POST">
-            <div class="field"><label for="email">Institutional email</label><input id="email" name="email" type="email" placeholder="you@ndmu.edu.ph" pattern=".+@ndmu\.edu\.ph$" required autocomplete="email"></div>
+            <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" placeholder="Your username" minlength="3" maxlength="30" required autocomplete="username"></div>
             <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" placeholder="Your password" required autocomplete="current-password"></div>
             <button class="primary-button" type="submit">Sign In <span>→</span></button>
         </form>
         <p class="auth-switch">Don't have an account? <a href="{{ url_for('register') }}">Create one</a></p>
     </section>
-    <p class="auth-note">Only <strong>@ndmu.edu.ph</strong> institutional email addresses can register.</p>
+    <p class="auth-note">No school, university, or institutional email is required.</p>
 </main>
 </body>
 </html>
