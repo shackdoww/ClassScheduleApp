@@ -1,10 +1,11 @@
 # Class Schedule
 
-A student-focused class schedule and planning app for NDMU institutional users.
+A universal personal class schedule and planning app for students, professionals, and anyone who wants to organize recurring schedules, tasks, events, and reminders.
 
 ## Current features
 
-- Individual accounts restricted to `@ndmu.edu.ph`
+- Universal accounts using username and password
+- No school, university, or institutional email requirement
 - Password hashing and account sessions
 - Weekly schedule with multi-day class entry
 - Editable class details: teacher, room, notes, color, class type, mode, meeting link
@@ -14,7 +15,7 @@ A student-focused class schedule and planning app for NDMU institutional users.
   - PC/laptop: image file picker
   - mandatory OCR review/correction before import
   - add/remove/disable rows and raw OCR view
-- Student Hub for today's schedule, next class, tasks, and quick tools
+- Personal dashboard for today's schedule, next class, tasks, and quick tools
 - Week, day, and month planner views
 - Tasks, homework, exams, priorities, due dates, and completion state
 - Personal events for study sessions, meals, errands, and meetings
@@ -22,7 +23,7 @@ A student-focused class schedule and planning app for NDMU institutional users.
 - Holidays / no-class dates
 - Attendance tracking
 - Grade tracking
-- Email notifications with first/second reminder options and class-start notification
+- Optional email notifications with first/second reminder options and class-start notification
 - Optional morning-briefing and commute-time settings stored for notification expansion
 - Notification history
 - ICS calendar export
@@ -30,6 +31,8 @@ A student-focused class schedule and planning app for NDMU institutional users.
 - PWA/offline foundation
 
 ## Database migration
+
+The application automatically adds the username field to existing user databases and generates usernames from existing account emails where needed. New accounts do not need an email address.
 
 After pulling the newer multi-feature version into an existing installation, run:
 
