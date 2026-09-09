@@ -4,20 +4,20 @@
 <body class="auth-body">
 <main class="auth-shell">
     <div class="auth-logo">＋</div>
-    <div class="eyebrow">NORTH DAVAO MINDANAO UNIVERSITY</div>
+    <div class="eyebrow">CLASS SCHEDULE</div>
     <h1>Create your account</h1>
-    <p class="auth-subtitle">Your timetable is private to your account. Register using your NDMU institutional email.</p>
+    <p class="auth-subtitle">Create a personal account for your schedule, planner, tasks, and reminders.</p>
     {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
     <section class="auth-card">
         <form method="POST">
-            <div class="field"><label for="email">Institutional email</label><input id="email" name="email" type="email" placeholder="you@ndmu.edu.ph" pattern=".+@ndmu\.edu\.ph$" required autocomplete="email"><small class="field-note">Must end in @ndmu.edu.ph</small></div>
+            <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" placeholder="Choose a username" minlength="3" maxlength="30" pattern="[A-Za-z0-9_.-]{3,30}" required autocomplete="username"><small class="field-note">3–30 characters: letters, numbers, dots, underscores, or hyphens.</small></div>
             <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" placeholder="At least 8 characters" minlength="8" required autocomplete="new-password"></div>
             <div class="field"><label for="confirm_password">Confirm password</label><input id="confirm_password" name="confirm_password" type="password" placeholder="Enter it again" minlength="8" required autocomplete="new-password"></div>
             <button class="primary-button" type="submit">Create Account <span>→</span></button>
         </form>
         <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
     </section>
-    <p class="auth-note">Each account gets its own schedule, reminders, and notification history.</p>
+    <p class="auth-note">No email or school affiliation is required to use the app.</p>
 </main>
 </body>
 </html>
